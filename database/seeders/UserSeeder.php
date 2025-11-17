@@ -21,10 +21,21 @@ class UserSeeder extends Seeder
                 'name' => $faker->name(),
                 'email' => $faker->unique()->safeEmail(),
                 'password' => Hash::make('password123'),
-                'avatar_url' => $faker->boolean(30) ? $faker->imageUrl(200, 200, 'people') : null,
+                'email_verified_at' => $faker->boolean(70) ? $faker->dateTimeBetween('-1 year', 'now') : null,
+                'remember_token' => $faker->boolean(50) ? \Illuminate\Support\Str::random(10) : null,
                 'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
                 'updated_at' => now(),
             ]);
         }
+
+        DB::table('users')->insert([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => Hash::make('password123'),
+            'email_verified_at' => now(),
+            'remember_token' => \Illuminate\Support\Str::random(10),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }
