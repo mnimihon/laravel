@@ -12,8 +12,8 @@ return new class extends Migration
     public function up() {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user1_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('user2_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user1_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user2_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
 

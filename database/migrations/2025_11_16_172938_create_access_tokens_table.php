@@ -9,7 +9,7 @@ return new class extends Migration
     public function up() {
         Schema::create('access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('token', 64);
             $table->dateTime('last_used_at')->nullable();
             $table->dateTime('expires_at')->nullable();
