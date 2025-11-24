@@ -19,6 +19,14 @@ return new class extends Migration
             $table->boolean('is_read')->default(false);
             $table->dateTime('created_at')->useCurrent();
         });
+
+        Schema::table('messages', function (Blueprint $table) {
+            $table->index('conversation_id');
+            $table->index('sender_id');
+            $table->index('created_at');
+            $table->index(['conversation_id', 'created_at']);
+            $table->index(['conversation_id', 'is_read']);
+        });
     }
 
     /**
@@ -26,6 +34,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('messages', function (Blueprint $table) {
+            $table->dropIndex(['conversation_id']);
+            $table->dropIndex(['sender_id']);
+            $table->dropIndex(['created_at']);
+            $table->dropIndex(['conversation_id', 'created_at']);
+            $table->dropIndex(['conversation_id', 'is_read']);
+        });
+
         Schema::dropIfExists('messages');
     }
 };

@@ -2,44 +2,30 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Conversation;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class ConversationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $faker = \Faker\Factory::create();
-        $users = DB::table('users')->pluck('id')->toArray();
+        $users = User::all();
+        $usedPairs = [];
 
-        $conversations = [];
-        $conversationCount = rand(15, 30);
-        $allPossiblePairs = [];
-        for ($i = 0; $i < count($users); $i++) {
-            for ($j = $i + 1; $j < count($users); $j++) {
-                $allPossiblePairs[] = [$users[$i], $users[$j]];
-            }
+        for ($i = 0; $i < 30; $i++) {
+            $user1 = $users->random();
+            $user2 = $users->random();
+
+            if ($user1->id === $user2->id) continue;
+            $pair = [$user1->id, $user2->id];
+            if (in_array($pair, $usedPairs)) continue;
+
+            $usedPairs[] = $pair;
+            Conversation::factory()
+                ->setUserID1($user1)
+                ->setUserID2($user2)
+                ->create();
         }
-
-        shuffle($allPossiblePairs);
-
-        $selectedPairs = array_slice($allPossiblePairs, 0, min($conversationCount, count($allPossiblePairs)));
-
-        foreach ($selectedPairs as $pair) {
-            $createdAt = $faker->dateTimeBetween('-1 year', 'now');
-
-            $conversations[] = [
-                'user1_id' => $pair[0],
-                'user2_id' => $pair[1],
-                'created_at' => $createdAt,
-                'updated_at' => $faker->dateTimeBetween($createdAt, 'now'),
-            ];
-        }
-
-        DB::table('conversations')->insert($conversations);
     }
 }
