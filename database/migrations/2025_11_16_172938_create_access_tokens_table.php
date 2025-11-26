@@ -14,20 +14,12 @@ return new class extends Migration
             $table->dateTime('last_used_at')->nullable();
             $table->dateTime('expires_at')->nullable();
             $table->dateTime('created_at')->useCurrent();
-        });
-
-        Schema::table('access_tokens', function (Blueprint $table) {
             $table->index('token');
             $table->index('expires_at');
         });
     }
 
     public function down() {
-        Schema::table('access_tokens', function (Blueprint $table) {
-            $table->dropIndex(['token']);
-            $table->dropIndex(['expires_at']);
-        });
-
         Schema::dropIfExists('access_tokens');
     }
 };

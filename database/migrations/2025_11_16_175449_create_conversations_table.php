@@ -18,11 +18,6 @@ return new class extends Migration
             $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
 
             $table->unique(['user1_id', 'user2_id']);
-        });
-
-
-        Schema::table('conversations', function (Blueprint $table) {
-            $table->index(['user1_id', 'user2_id']);
             $table->index(['user2_id', 'user1_id']);
             $table->index('updated_at');
         });
@@ -33,12 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('conversations', function (Blueprint $table) {
-            $table->dropIndex(['user1_id', 'user2_id']);
-            $table->dropIndex(['user2_id', 'user1_id']);
-            $table->dropIndex(['updated_at']);
-        });
-
         Schema::dropIfExists('conversations');
     }
 };

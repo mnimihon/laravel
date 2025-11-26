@@ -11,21 +11,30 @@ class ConversationSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        $usedPairs = [];
 
-        for ($i = 0; $i < 30; $i++) {
-            $user1 = $users->random();
-            $user2 = $users->random();
+        $shuffledUsers1 = $users->shuffle();
+        $shuffledUsers2 = $users->shuffle();
 
-            if ($user1->id === $user2->id) continue;
-            $pair = [$user1->id, $user2->id];
-            if (in_array($pair, $usedPairs)) continue;
+        $pairs = [];
 
-            $usedPairs[] = $pair;
-            Conversation::factory()
-                ->setUserID1($user1)
-                ->setUserID2($user2)
-                ->create();
+        foreach ($shuffledUsers1 as $user1) {
+            foreach ($shuffledUsers2 as $user2) {
+                if ($user1->id === $user2->id) continue;
+
+                $pair = [$user1->id, $user2->id];
+                $reversePair = [$user2->id, $user1->id];
+                if (!in_array($pair, $pairs) && !in_array($reversePair, $pairs)) {
+                    $pairs[] = $pair;
+
+                    if (count($pairs) == 30) {
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        foreach ($pairs as $pair) {
+            Conversation::factory()->create(['user1_id' => $pair[0], 'user2_id' => $pair[1]]);
         }
     }
 }
