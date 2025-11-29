@@ -10,13 +10,10 @@ class AccessTokenSeeder extends Seeder
 {
     public function run(): void
     {
-        /** @var AccessToken $factory */
-        $factory = AccessToken::factory();
         $users = User::all();
-        foreach ($users as $user){
-            $factory->count(1)
-                ->forUser($user)
-                ->create();
-        }
+        AccessToken::factory()
+            ->count($users->count())
+            ->recycle($users)
+            ->create();
     }
 }
