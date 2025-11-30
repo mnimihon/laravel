@@ -18,6 +18,8 @@ return new class extends Migration
             $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
 
             $table->unique(['user1_id', 'user2_id']);
+            $table->index(['user2_id', 'user1_id']);
+            $table->index('updated_at');
         });
     }
 

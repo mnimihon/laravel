@@ -2,44 +2,39 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Conversation;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class ConversationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $faker = \Faker\Factory::create();
-        $users = DB::table('users')->pluck('id')->toArray();
+        $users = User::all();
 
-        $conversations = [];
-        $conversationCount = rand(15, 30);
-        $allPossiblePairs = [];
-        for ($i = 0; $i < count($users); $i++) {
-            for ($j = $i + 1; $j < count($users); $j++) {
-                $allPossiblePairs[] = [$users[$i], $users[$j]];
+        $shuffledUsers1 = $users->shuffle();
+        $shuffledUsers2 = $users->shuffle();
+
+        $pairs = [];
+
+        foreach ($shuffledUsers1 as $user1) {
+            foreach ($shuffledUsers2 as $user2) {
+                if ($user1->id === $user2->id) continue;
+
+                $pair = [$user1->id, $user2->id];
+                $reversePair = [$user2->id, $user1->id];
+                if (!in_array($pair, $pairs) && !in_array($reversePair, $pairs)) {
+                    $pairs[] = $pair;
+
+                    if (count($pairs) == 30) {
+                        break 2;
+                    }
+                }
             }
         }
 
-        shuffle($allPossiblePairs);
-
-        $selectedPairs = array_slice($allPossiblePairs, 0, min($conversationCount, count($allPossiblePairs)));
-
-        foreach ($selectedPairs as $pair) {
-            $createdAt = $faker->dateTimeBetween('-1 year', 'now');
-
-            $conversations[] = [
-                'user1_id' => $pair[0],
-                'user2_id' => $pair[1],
-                'created_at' => $createdAt,
-                'updated_at' => $faker->dateTimeBetween($createdAt, 'now'),
-            ];
+        foreach ($pairs as $pair) {
+            Conversation::factory()->create(['user1_id' => $pair[0], 'user2_id' => $pair[1]]);
         }
-
-        DB::table('conversations')->insert($conversations);
     }
 }

@@ -18,6 +18,12 @@ return new class extends Migration
             $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->dateTime('created_at')->useCurrent();
+
+            $table->index('conversation_id');
+            $table->index('sender_id');
+            $table->index('created_at');
+            $table->index(['conversation_id', 'created_at']);
+            $table->index(['conversation_id', 'is_read']);
         });
     }
 

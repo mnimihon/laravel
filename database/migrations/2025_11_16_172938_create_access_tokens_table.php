@@ -14,6 +14,8 @@ return new class extends Migration
             $table->dateTime('last_used_at')->nullable();
             $table->dateTime('expires_at')->nullable();
             $table->dateTime('created_at')->useCurrent();
+            $table->index('token');
+            $table->index('expires_at');
         });
     }
 
