@@ -3,44 +3,37 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Message;
+use App\Services\MessagesService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class MessagesController extends Controller
 {
-    public function index()
+    public function index(MessagesService $messagesService)
     {
-        $messages = Message::paginate(15);
+        $messages = $messagesService->getAllPaginated(15);
         return view('admin.messages.index', compact('messages'));
     }
 
-    public function show($id)
+    public function show($id, MessagesService $messagesService)
     {
-        $message = Message::find($id);
+        $message = $messagesService->getByID($id);
         return view('admin.messages.show', compact('message'));
     }
 
-    public function update(Request $request, $id)
+    public function update($id, Request $request, MessagesService $messagesService)
     {
-        $request->validate([
-            'message' => 'required|string|min:1|max:5000'
-        ], [
-            'message.required' => 'Поле сообщение обязательно для заполнения',
-            'message.min' => 'Сообщение не может быть пустым',
-            'message.max' => 'Сообщение не должно превышать 5000 символов'
-        ]);
-
-        $message = Message::find($id);
+        $messagesService->updateValidate($request);
+        $message = $messagesService->getByID($id);
         $message->update(['message' => $request->message]);
 
         return redirect()->route('admin.messages.show', $id)
             ->with('success', 'Сообщение обновлено');
     }
 
-    public function delete($id)
+    public function delete($id, MessagesService $messagesService)
     {
-        Message::destroy($id);
+        $message = $messagesService->getByID($id);
+        $messagesService->delete($message);
         return redirect()->route('admin.messages.index')
             ->with('deleted', 'Сообщение удалено');
     }
