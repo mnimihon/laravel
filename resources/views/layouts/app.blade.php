@@ -1,58 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', config('app.name'))</title>
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    @yield('head')
-    @yield('head-bottom')
-</head>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
 
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-        <a class="navbar-brand" href="{{ route('home') }}">{{ config('app.name') }}</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('profile') }}">Профиль</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('register') }}">Регистрация</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('static') }}">Статическая страница</a>
-                </li>
-            </ul>
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+
+            <!-- Page Content -->
+            <main>
+                {{ $slot ?? '' }}
+            </main>
         </div>
-    </div>
-</nav>
-
-<!-- Main Content -->
-<main class="main-content">
-    @yield('body')
-</main>
-
-<!-- Footer -->
-<footer class="footer mt-5 py-4">
-    <div class="container">
-        <div class="text-center">
-            <p class="mb-0">&copy; {{ date('Y') }} {{ config('app.name') }}. Все права защищены.</p>
-        </div>
-    </div>
-</footer>
-
-@yield('body-bottom')
-</body>
-
+    </body>
 </html>

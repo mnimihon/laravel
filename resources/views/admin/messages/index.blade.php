@@ -1,8 +1,8 @@
-@extends('layouts.admin')
+@extends('layouts.guest')
 
 @section('body')
     <div class="container mt-3">
-        <h3>Сообщения</h3>
+        <h3 class="fw-bold fs-2 text-dark mb-2">Сообщения</h3>
 
         @if(session('deleted'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -28,14 +28,16 @@
                                 Редактировать
                             </a>
 
-                            <form method="POST" action="{{ route('admin.messages.delete', $message->id) }}">
-                                @csrf
-                                @method('DELETE')
+                            @can('is-admin')
+                                <form method="POST" action="{{ route('admin.messages.delete', $message->id) }}">
+                                    @csrf
+                                    @method('DELETE')
 
-                                <button type="submit" class="btn btn-danger mt-2">
-                                    Удалить
-                                </button>
-                            </form>
+                                    <button type="submit" class="btn btn-danger mt-2">
+                                        Удалить
+                                    </button>
+                                </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

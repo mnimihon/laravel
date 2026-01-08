@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Implementations;
 
+use App\DTO\UserCreateDTO;
 use App\DTO\UserDTO;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -28,7 +29,7 @@ class UserRepositoryImpl implements UserRepository {
         return $this->model->paginate($limit);
     }
 
-    public function create(UserDTO $dto): User
+    public function create(UserCreateDTO $dto): User
     {
         return $this->model->create($dto->toDatabaseArray());
     }

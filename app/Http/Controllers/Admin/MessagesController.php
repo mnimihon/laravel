@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\MessagesService;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class MessagesController extends Controller
 {
+    use AuthorizesRequests;
     public function index(MessagesService $messagesService)
     {
         $messages = $messagesService->getAllPaginated(15);
@@ -33,6 +35,8 @@ class MessagesController extends Controller
     public function delete($id, MessagesService $messagesService)
     {
         $message = $messagesService->getByID($id);
+
+        $this->authorize('delete', $message);
         $messagesService->delete($message);
         return redirect()->route('admin.messages.index')
             ->with('deleted', 'Сообщение удалено');

@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Implementations;
 
+use App\DTO\UserCreateDTO;
 use App\DTO\UserDTO;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -14,7 +15,7 @@ class UserServiceImpl implements UserService {
         private readonly UserRepository $repository
     ) {}
 
-    public function create(UserDTO $dto): User
+    public function create(UserCreateDTO $dto): User
     {
         return $this->repository->create($dto);
     }

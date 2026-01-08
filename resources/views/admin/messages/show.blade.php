@@ -1,8 +1,8 @@
-@extends('layouts.admin')
+@extends('layouts.guest')
 
 @section('body')
     <div class="container mt-2">
-        <h3>Редактировать сообщение</h3>
+        <h3 class="fw-bold fs-2 text-dark mb-2">Редактировать сообщение</h3>
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
