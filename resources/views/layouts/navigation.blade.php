@@ -11,7 +11,7 @@
 
             <div class="flex items-center">
                 @auth
-                    @can('is-admin-manager')
+                    @if(auth()->user()->can('view_users') || auth()->user()->can('view_messages'))
                         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')" class="mr-4">
                             {{ __('Пользователи') }}
                         </x-nav-link>
@@ -19,7 +19,7 @@
                         <x-nav-link :href="route('admin.messages.index')" :active="request()->routeIs('admin.messages.index')" class="mr-4">
                             {{ __('Сообщения') }}
                         </x-nav-link>
-                    @endcan
+                    @endif
 
 
                     <form method="POST" action="{{ route('logout') }}">

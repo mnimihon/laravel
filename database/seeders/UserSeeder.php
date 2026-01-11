@@ -4,28 +4,27 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminRole = Role::where('name', 'admin')->first();
-        $managerRole = Role::where('name', 'manager')->first();
-        $userRole = Role::where('name', 'user')->first();
-
-        User::factory()->create([
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        $admin = User::factory()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'role_id' => $adminRole->id,
         ]);
+        $admin->assignRole('admin');
 
-        User::factory()->count(3)->create([
-            'role_id' => $managerRole->id,
-        ]);
+        $managers = User::factory()->count(3)->create();
+        foreach ($managers as $manager) {
+            $manager->assignRole('manager');
+        }
 
-        User::factory()->count(16)->create([
-            'role_id' => $userRole->id,
-        ]);
+        $users = User::factory()->count(16)->create();
+        foreach ($users as $user) {
+            $user->assignRole('user');
+        }
     }
 }

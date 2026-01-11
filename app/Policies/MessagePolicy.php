@@ -3,9 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Message;
-use App\Models\Role;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class MessagePolicy
 {
@@ -46,7 +44,7 @@ class MessagePolicy
      */
     public function delete(User $user, Message $message): bool
     {
-        return $user->role->name == Role::ADMIN;
+        return $user->can('delete_messages');
     }
 
     /**

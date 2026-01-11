@@ -28,7 +28,7 @@
                                 Редактировать
                             </a>
 
-                            @can('is-admin')
+                            @if(auth()->user()->can('delete_messages'))
                                 <form method="POST" action="{{ route('admin.messages.delete', $message->id) }}">
                                     @csrf
                                     @method('DELETE')
@@ -37,7 +37,7 @@
                                         Удалить
                                     </button>
                                 </form>
-                            @endcan
+                            @endif
                         </td>
                     </tr>
                 @endforeach

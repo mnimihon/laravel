@@ -36,13 +36,30 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::prefix('admin')->middleware(['can:is-admin-manager'])->group(function () {
-        Route::get('/users', [UsersController::class, 'index'])->name('admin.users.index');
-        Route::get('/users/{id}', [UsersController::class, 'show'])->name('admin.users.show');
-        Route::get('/messages', [MessagesController::class, 'index'])->name('admin.messages.index');
-        Route::get('/messages/{id}', [MessagesController::class, 'show'])->name('admin.messages.show');
-        Route::post('/messages/update/{id}', [MessagesController::class, 'update'])->name('admin.messages.update');
-        Route::delete('/messages/delete/{id}', [MessagesController::class, 'delete'])->name('admin.messages.delete');
+    Route::prefix('admin')->group(function () {
+        Route::get('/users', [UsersController::class, 'index'])
+            ->name('admin.users.index')
+            ->middleware('can:view_users');
+
+        Route::get('/users/{id}', [UsersController::class, 'show'])
+            ->name('admin.users.show')
+            ->middleware('can:view_users');
+
+        Route::get('/messages', [MessagesController::class, 'index'])
+            ->name('admin.messages.index')
+            ->middleware('can:view_messages');
+
+        Route::get('/messages/{id}', [MessagesController::class, 'show'])
+            ->name('admin.messages.show')
+            ->middleware('can:view_messages');
+
+        Route::post('/messages/update/{id}', [MessagesController::class, 'update'])
+            ->name('admin.messages.update')
+            ->middleware('can:edit_messages');
+
+        Route::delete('/messages/delete/{id}', [MessagesController::class, 'delete'])
+            ->name('admin.messages.delete')
+            ->middleware('can:delete_messages');
     });
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])

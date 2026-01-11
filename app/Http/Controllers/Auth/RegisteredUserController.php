@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\DTO\UserCreateDTO;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use App\Models\User;
-use App\Services\RoleService;
 use App\Services\UserService;
 use App\ValueObjects\Email;
 use Illuminate\Auth\Events\Registered;
@@ -33,7 +31,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request, UserService $userService, RoleService $roleService): RedirectResponse
+    public function store(Request $request, UserService $userService): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -44,9 +42,10 @@ class RegisteredUserController extends Controller
         $user = $userService->create(new UserCreateDTO(
             name: $request->name,
             email: new Email($request->email),
-            password: Hash::make($request->password),
-            role: $roleService->getByName(Role::USER)
+            password: Hash::make($request->password)
         ));
+
+        $user->assignRole('user');
 
         event(new Registered($user));
 
