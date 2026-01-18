@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface MessagesService
 {
-    public function getByID(int $id);
+    public function getByID(int $id): Message;
     public function getAllPaginated(int $limit = 10): LengthAwarePaginator;
     public function updateValidate(Request $request): void;
     public function create(MessageDTO $dto): Message;

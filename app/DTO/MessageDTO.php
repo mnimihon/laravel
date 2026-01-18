@@ -6,8 +6,8 @@ class MessageDTO
 {
     public function __construct(
         public readonly int $id,
-        public readonly int $conversationId,
-        public readonly int $senderId,
+        public readonly int $conversationID,
+        public readonly int $senderID,
         public readonly string $message,
         public readonly bool $isRead,
         public readonly \DateTime $createdAt
@@ -17,8 +17,8 @@ class MessageDTO
     {
         return new self(
             id: $data['id'],
-            conversationId: $data['conversation_id'],
-            senderId: $data['sender_id'],
+            conversationID: $data['conversation_id'],
+            senderID: $data['sender_id'],
             message: $data['message'],
             isRead: (bool) $data['is_read'],
             createdAt: new \DateTime($data['created_at'])
@@ -29,8 +29,8 @@ class MessageDTO
     {
         return [
             'id' => $this->id,
-            'conversation_id' => $this->conversationId,
-            'sender_id' => $this->senderId,
+            'conversation_id' => $this->conversationID,
+            'sender_id' => $this->senderID,
             'message' => $this->message,
             'is_read' => $this->isRead,
             'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
@@ -40,8 +40,8 @@ class MessageDTO
     public function toDatabaseArray(): array
     {
         return [
-            'conversation_id' => $this->conversationId,
-            'sender_id' => $this->senderId,
+            'conversation_id' => $this->conversationID,
+            'sender_id' => $this->senderID,
             'message' => $this->message,
             'is_read' => $this->isRead,
         ];
