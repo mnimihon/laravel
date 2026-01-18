@@ -23,7 +23,8 @@ class ProcessMessageDeletion
     public function handle(MessageDeleted $event): void
     {
         SendTelegramJob::dispatch($event->data)
-            ->onQueue('telegram');
+            ->onQueue('telegram')
+            ->delay(now()->addMinutes(1));
 
         LogMessageJob::dispatch($event->data)
             ->onQueue('logs');
