@@ -15,7 +15,8 @@ class MessagesServiceImpl implements MessagesService {
         private readonly MessagesRepository $repository
     ) {}
 
-    public function getByID(int $id) {
+    public function getByID(int $id): Message
+    {
         return $this->repository->getByID($id);
     }
 

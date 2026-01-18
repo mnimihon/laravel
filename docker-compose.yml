@@ -11,6 +11,12 @@ services:
       - laravel_network
     environment:
       - PHP_IDE_CONFIG=serverName=Docker
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=null
+    depends_on:
+      - mysql
+      - redis
 
   node:
     image: node:20-alpine
@@ -55,6 +61,22 @@ services:
     networks:
       - laravel_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: laravel_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - laravel_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: laravel_phpmyadmin
@@ -70,9 +92,19 @@ services:
     depends_on:
       - mysql
 
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    networks:
+      - laravel_network
+
 volumes:
   mysql_data:
   php_socket:
+  redis_data:
 
 networks:
   laravel_network:

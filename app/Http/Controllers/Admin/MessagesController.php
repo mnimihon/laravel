@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DTO\MessageDeletedEventDTO;
+use App\Events\MessageDeleted;
 use App\Http\Controllers\Controller;
 use App\Services\MessagesService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Log;
 
 class MessagesController extends Controller
 {
@@ -35,9 +38,9 @@ class MessagesController extends Controller
     public function delete($id, MessagesService $messagesService)
     {
         $message = $messagesService->getByID($id);
-
         $this->authorize('delete', $message);
         $messagesService->delete($message);
+        event(new MessageDeleted(MessageDeletedEventDTO::fromModels($message, auth()->user())));
         return redirect()->route('admin.messages.index')
             ->with('deleted', 'Сообщение удалено');
     }
