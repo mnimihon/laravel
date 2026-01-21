@@ -7,7 +7,8 @@ class PageController extends Controller
     public function home()
     {
         return view('pages.home', [
-            'title' => 'Главная страница'
+            'title' => __('home.title'),
+            'description' => __('home.description'),
         ]);
     }
 }

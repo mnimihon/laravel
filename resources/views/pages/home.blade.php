@@ -7,8 +7,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="jumbotron bg-light p-5 rounded">
-                    <h1 class="display-4">Добро пожаловать!</h1>
-                    <p class="lead">Главная страница</p>
+                    <h1 class="display-4">{{ $title }}</h1>
+                    <p class="lead">{{ $description }}</p>
                 </div>
             </div>
         </div>
