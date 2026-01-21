@@ -9,12 +9,18 @@ use App\Http\Controllers\Admin\MessagesController;
 use \App\Http\Controllers\Admin\UsersController;
 use Illuminate\Http\Request;
 
-Route::get('/', function (Request $request) {
-    if (auth()->check()) {
-        return app(ProfileController::class)->edit($request);
-    } else {
-        return app(PageController::class)->home();
-    }
+Route::prefix('{lang}')->where(['lang' => 'ru|en'])->group(function () {
+    Route::get('/', function (Request $request) {
+        if (auth()->check()) {
+            return app(ProfileController::class)->edit($request);
+        } else {
+            return app(PageController::class)->home();
+        }
+    });
+});
+
+Route::get('/', function () {
+    return redirect('/ru');
 })->name('home');
 
 Route::middleware('guest')->group(function () {
